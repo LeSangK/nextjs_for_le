@@ -1,0 +1,27 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - uses: actions/cache@v3
+        with:
+          path: 'node_modules'
+          key: node_modules-${{ hashFiles('yarn.lock') }}
+      - name: Install dependencies
+        run: yarn install
+
+      - name: lint
+        run: yarn lint
+
+      - name: build
+        run: yarn build
