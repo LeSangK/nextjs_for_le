@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { todoState } from '../state/atoms/todoState';
 
 export default function Home() {
-  const [todos, setTodos] = useState<string[]>([]);
+  const [todos, setTodos] = useRecoilState(todoState);
   const [inputValue, setInputValue] = useState('');
 
   const handleAddTodo = () => {
