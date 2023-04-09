@@ -4,19 +4,25 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --max-warnings 0"
+    "lint": "next lint --max-warnings 0",
+    "generate:graphql": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.11",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.15",
+    "graphql": "^16.6.0",
     "next": "^12.1.5",
     "react": "~17.0.2",
     "react-dom": "~17.0.2",
     "recoil": "^0.7.7"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^3.3.0",
+    "@graphql-codegen/client-preset": "^3.0.0",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@types/node": "^18.15.0",
     "@types/react": "^17.0.40",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
@@ -24,6 +30,6 @@
     "eslint-config-next": "12.1.0",
     "eslint-config-prettier": "^8.7.0",
     "prettier": "^2.5.1",
-    "typescript": "^4.9.5"
+    "typescript": "^5.0.4"
   }
 }
