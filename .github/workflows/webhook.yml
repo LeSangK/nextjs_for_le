@@ -13,4 +13,4 @@ jobs:
     steps:
       - name: Send notification
         run: |
-          curl -X POST --data-urlencode "payload={\"channel\": \"#timeline_raku\", \"username\": \"webhookbot\", \"text\": \"this message was sent by github action \", \"icon_emoji\": \":ghost:\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST --data-urlencode "payload={\"channel\": \"#timeline_raku\", \"username\": \"webhookbot\", \"text\": \"カビゴン可愛い😍 \", \"icon_emoji\": \":kabigon:\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
