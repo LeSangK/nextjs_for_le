@@ -1,0 +1,19 @@
+name: Notify Slack
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Slack
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # ここはSecretsから設定します
+        run: |
+          RELEASE_NAME=$(echo "${{ github.event.release.name }}" | sed 's/"/\\"/g' | sed "s/'/\\'/g")
+          RELEASE_NOTES=$(echo "${{ github.event.release.body }}" | sed 's/"/\\"/g' | sed "s/'/\\'/g" | awk '{printf "%s\\n", $0}' ORS=' ')
+          PAYLOAD="{\"channel\": \"#timeline_raku\", \"username\": \"webhookbot\", \"text\": \"リリース名: $RELEASE_NAME\n\nリリースノート:\n$RELEASE_NOTES\", \"icon_emoji\": \":ghost:\"}"
+
+          curl -X POST --data-urlencode "payload=$PAYLOAD" $SLACK_WEBHOOK_URL
