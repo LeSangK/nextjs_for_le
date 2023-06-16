@@ -1,0 +1,33 @@
+on:
+  release:
+    types:
+      - published
+
+name: Release published
+jobs:
+  publish:
+    name: notification to slack
+    runs-on: ubuntu-latest
+    steps:
+      - id: get_release_note
+        name: echo release note
+        run: |
+          # 改行コードをエスケープする
+          release_body='${{ github.event.release.body }}'
+          release_body=${release_body//$'\r\n'/\\n}
+          release_body=${release_body//$'\n'/\\n}
+          echo "::set-output name=body::$release_body"
+      # Start a Slack workflow using a webhook trigger
+      # https://github.com/slackapi/slack-github-action
+      - name: Send GitHub Action trigger data to Slack workflow
+        id: slack_notification
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          channel-id: 'CBBSQJPSA'
+          payload: |
+            {
+              "text": ":writing_hand: ビルド結果: ${{ job.status }}\n${{ github.event.release.html_url }}\n```${{ steps.get_release_note.outputs.body }}```",
+              "unfurl_links": false
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
