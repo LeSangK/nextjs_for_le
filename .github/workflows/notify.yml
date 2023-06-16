@@ -23,7 +23,7 @@ jobs:
         id: slack_notification
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          channel-id: 'CBBSQJPSA'
+          channel-id: 'C05D16T8HCH'
           payload: |
             {
               "text": ":writing_hand: ビルド結果: ${{ job.status }}\n${{ github.event.release.html_url }}\n```${{ steps.get_release_note.outputs.body }}```",
