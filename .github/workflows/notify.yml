@@ -10,10 +10,10 @@ jobs:
     steps:
       - name: Notify Slack
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # ここはSecretsから設定します
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          RELEASE_NAME=$(echo "${{ github.event.release.name }}" | sed 's/"/\\"/g' | sed "s/'/\\'/g")
-          RELEASE_NOTES=$(echo "${{ github.event.release.body }}" | sed 's/"/\\"/g' | sed "s/'/\\'/g" | awk '{printf "%s\\n", $0}' ORS=' ')
+          RELEASE_NAME=$(jq -n --arg str "${{ github.event.release.name }}" '$str')
+          RELEASE_NOTES=$(jq -n --arg str "${{ github.event.release.body }}" '$str')
           PAYLOAD="{\"channel\": \"#timeline_raku\", \"username\": \"webhookbot\", \"text\": \"リリース名: $RELEASE_NAME\n\nリリースノート:\n$RELEASE_NOTES\", \"icon_emoji\": \":ghost:\"}"
 
           curl -X POST --data-urlencode "payload=$PAYLOAD" $SLACK_WEBHOOK_URL
