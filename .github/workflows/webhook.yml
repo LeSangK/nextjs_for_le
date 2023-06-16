@@ -14,6 +14,6 @@ jobs:
         run: |
           RELEASE_NAME=$(echo "${{ github.event.release.name }}" | sed 's/"/\\"/g' | sed "s/'/\\'/g")
           RELEASE_NOTES=$(echo "${{ github.event.release.body }}" | sed 's/"/\\"/g' | sed "s/'/\\'/g" | awk '{printf "%s\\n", $0}' ORS=' ')
-          PAYLOAD="{\"channel\": \"#timeline_raku\", \"username\": \"webhookbot\", \"text\": \"リリース名: $RELEASE_NAME\n\nリリースノート:\n$RELEASE_NOTES\", \"icon_emoji\": \":ghost:\"}"
+          PAYLOAD="{\"channel\": \"#timeline_raku\", \"username\": \"webhookbot\", \"text\": \"リリース名", \"icon_emoji\": \":ghost:\"}"
 
           curl -X POST --data-urlencode "payload=$PAYLOAD" $SLACK_WEBHOOK_URL
