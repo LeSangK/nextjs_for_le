@@ -1,4 +1,4 @@
-name: Notify Release
+name: Notify Slack
 
 on:
   release:
@@ -8,15 +8,12 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - id: get_release_note
-        name: echo release note
+      - name: Notify Slack
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # ここはSecretsから設定します
         run: |
-          # 改行コードをエスケープする
-          release_body='${{ github.event.release.body }}'
-          release_body=${release_body//$'\r\n'/\\n}
-          release_body=${release_body//$'\n'/\\n}
-          echo "::set-output name=body::$release_body"
+          RELEASE_NAME=$(echo "${{ github.event.release.name }}" | sed 's/"/\\"/g' | sed "s/'/\\'/g")
+          RELEASE_NOTES=$(echo "${{ github.event.release.body }}" | sed 's/"/\\"/g' | sed "s/'/\\'/g" | awk '{printf "%s\\n", $0}' ORS=' ')
+          PAYLOAD="{\"channel\": \"#timeline_raku\", \"username\": \"webhookbot\", \"text\": \"リリース名: $RELEASE_NAME\n\nリリースノート:\n$RELEASE_NOTES\", \"icon_emoji\": \":ghost:\"}"
 
-      - name: Send notification
-        run: |
-          curl -X POST --data-urlencode "payload={\"channel\": \"#timeline_raku\", \"username\": \"test raku pull request\", \"text\": \"${{ steps.get_release_note.outputs.body }} \", \"icon_emoji\": \":kabigon:\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST --data-urlencode "payload=$PAYLOAD" $SLACK_WEBHOOK_URL
