@@ -3,9 +3,6 @@ name: Notify Release
 on:
   release:
     types: [published]
-  push:
-    branches:
-      - main
 
 jobs:
   notify:
@@ -13,4 +10,4 @@ jobs:
     steps:
       - name: Send notification
         run: |
-          curl -X POST --data-urlencode "payload={\"channel\": \"#timeline_raku\", \"username\": \"webhookbot\", \"text\": \"カビゴン可愛い😍 \", \"icon_emoji\": \":kabigon:\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST --data-urlencode "payload={\"channel\": \"#timeline_raku\", \"username\": \"test raku pull request\", \"text\": \"${{ github.event.release.body }} \", \"icon_emoji\": \":kabigon:\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
