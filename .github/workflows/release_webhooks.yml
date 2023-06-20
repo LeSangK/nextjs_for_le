@@ -1,0 +1,42 @@
+name: Slack Release published
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Check out theis repo
+      - uses: actions/checkout@v2
+
+      # Start a Slack workflow using a webhook trigger
+      # https://github.com/slackapi/slack-github-action
+      - name: Send GitHub Action trigger data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          payload: |
+            {
+              "text": "github: リリースが公開されました！",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "リリースが公開されました！"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ${{ toJSON(github.event.release.body) }}
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
