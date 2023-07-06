@@ -14,7 +14,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '18'
 
       - name: Write release body to file
         run: |
@@ -27,8 +27,8 @@ jobs:
       - name: Read formatted release note
         id: format
         run: |
-          cat .github/formattedReleaseBody.txt
           echo "::set-output name=body::$(<.github/formattedReleaseBody.txt)"
+          cat .github/formattedReleaseBody.txt
 
       - name: Send to Slack
         uses: slackapi/slack-github-action@v1.16.0
