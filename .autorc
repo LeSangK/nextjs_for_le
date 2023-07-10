@@ -1,0 +1,9 @@
+{
+  "plugins": [
+    "git-tag"
+  ],
+  "owner": "https://github.com/LeSangK",
+  "repo": "nextjs_for_le",
+  "name": "LeSangK",
+  "email": "sou.raku@revcomm.co.jp"
+}
