@@ -1,0 +1,16 @@
+{
+  "plugins": [
+    "npm",
+    "slack",
+    [
+      "slack",
+      {
+        "url": "https://hooks.slack.com/services/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"
+      }
+    ]
+  ],
+  "owner": "https://github.com/LeSangK",
+  "repo": "nextjs_for_le",
+  "name": "LeSangK",
+  "email": "sou.raku@revcomm.co.jp"
+}

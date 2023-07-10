@@ -5,6 +5,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
+    "release": "auto shipit",
     "generate:graphql": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
@@ -20,16 +21,28 @@
     "recoil": "^0.7.7"
   },
   "devDependencies": {
+    "@auto-it/slack": "^10.46.0",
     "@graphql-codegen/cli": "^3.3.0",
     "@graphql-codegen/client-preset": "^3.0.0",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@types/node": "^18.15.0",
     "@types/react": "^17.0.40",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "auto": "^10.46.0",
     "eslint": "8.9.0",
     "eslint-config-next": "12.1.0",
     "eslint-config-prettier": "^8.7.0",
     "prettier": "^2.5.1",
     "typescript": "^5.0.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LeSangK/nextjs_for_le"
+  },
+  "author": "LeSangK <sou.raku@revcomm.co.jp>",
+  "auto": {
+    "plugins": [
+      "npm"
+    ]
   }
 }

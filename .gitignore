@@ -33,6 +33,7 @@ yarn-error.log*
 
 # vercel
 .vercel
+.env
 
 releaseBody.txt
 formattedReleaseBody.txt
