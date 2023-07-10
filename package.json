@@ -5,6 +5,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
+    "release": "auto shipit",
     "generate:graphql": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
@@ -34,7 +35,10 @@
     "prettier": "^2.5.1",
     "typescript": "^5.0.4"
   },
-  "repository": "https://github.com/LeSangK/nextjs_for_le",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LeSangK/nextjs_for_le"
+  },
   "author": "LeSangK <sou.raku@revcomm.co.jp>",
   "auto": {
     "plugins": [
