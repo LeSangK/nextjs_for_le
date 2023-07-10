@@ -10,7 +10,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.ADMIN_TOKEN }}
           fetch-depth: 0
 
       - name: Install Node.js and change npm registry
