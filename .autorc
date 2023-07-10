@@ -5,11 +5,7 @@
     [
       "slack",
       {
-        "url": "https://hooks.slack.com/services/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",
-        "atTarget": "slack",
-        "channels": [
-          "timeline_raku"
-        ]
+        "url": "https://hooks.slack.com/services/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"
       }
     ]
   ],
