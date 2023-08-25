@@ -1,4 +1,4 @@
-name: Deploy to Vercel
+name: Build
 on:
   push:
     branches:
@@ -47,8 +47,15 @@ jobs:
         with:
           payload: |
             {
-              "text": ":new nextjs-for-le has been deployed!",
+              "text": ":Deployed",
               "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":vercel: new nextjs-for-le has been deployed in vercel!"
+                  }
+                },
                 {
                   "type": "context",
                   "elements": [
