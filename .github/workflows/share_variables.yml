@@ -1,0 +1,17 @@
+name: Share Variables Using Environment Variables
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set an example variable
+        run: echo "MY_VAR=This is the value sang le" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Get the value from the previous step
+        run: echo "The value is $MY_VAR"
+        shell: bash
