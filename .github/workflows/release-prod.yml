@@ -3,7 +3,7 @@ name: Release to Production
 on:
   push:
     branches:
-      - production
+      - release
 
 jobs:
   create_release:
@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Bump version and create tag
         run: |
-          NEW_TAG="v$(date +'%Y%m%d')"
+          NEW_TAG="v$(date +'%Y%m%d')" >> $GITHUB_ENV
           git tag $NEW_TAG
           git push origin --tags
       - name: Create GitHub Release
