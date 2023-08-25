@@ -53,9 +53,8 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":vercel: New nextjs-for-le has been deployed in Vercel! 🍣"
+                    "text": ":vercel: *<https://github.com/LeSangK/nextjs_for_le|New nextjs-for-le>* has been deployed in Vercel! 🍣"
                   },
-                  url: "https://github.com/LeSangK/nextjs_for_le"
                 },
                 {
                   "type": "context",
