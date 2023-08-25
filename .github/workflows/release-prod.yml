@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Bump version and create tag
         run: |
           echo NEW_TAG="v$(date +'%Y%m%d')" >> $GITHUB_ENV
 
       - name: Deploy to Vercel
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -56,10 +56,6 @@ jobs:
               }
              ]
             }
-        env:
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
       - name: Get draft release
         run: |
           RELEASE_ID=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
