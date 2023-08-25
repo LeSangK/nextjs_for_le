@@ -70,3 +70,6 @@ jobs:
              -H "Accept: application/vnd.github.v3+json" \
              -d '{"name": "${{ env.NEW_TAG }}", "tag_name": "${{ env.NEW_TAG }}", "draft": false}' \
              https://api.github.com/repos/${{ github.repository }}/releases/${{ env.RELEASE_ID }}
+        env:
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
