@@ -13,22 +13,17 @@ jobs:
       - name: Bump version and create tag
         run: |
           echo NEW_TAG="v$(date +'%Y%m%d')" >> $GITHUB_ENV
-      - name: Get release drafter body
-        id: get_body
+      - name: Get draft release
         run: |
-          BODY=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                 -H "Accept: application/vnd.github.v3+json" \
-                 https://api.github.com/repos/${{ github.repository }}/releases \
-           | jq '.[] | select(.draft==true) | .body')
-          echo "RELEASE_BODY=$BODY" >> $GITHUB_ENV
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ env.NEW_TAG }}
-          release_name: ${{ env.NEW_TAG }}
-          body: ${{ env.RELEASE_BODY }}
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_ID=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    https://api.github.com/repos/${{ github.repository }}/releases \
+               | jq '.[] | select(.draft==true) | .id')
+          echo "RELEASE_ID=${RELEASE_ID}" >> $GITHUB_ENV
+      - name: Update and publish release
+        run: |
+          curl -X PATCH \
+             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+             -H "Accept: application/vnd.github.v3+json" \
+             -d '{"name": "${{ env.NEW_TAG }}", "tag_name": "${{ env.NEW_TAG }}", "draft": false}' \
+             https://api.github.com/repos/${{ github.repository }}/releases/${{ env.RELEASE_ID }}
