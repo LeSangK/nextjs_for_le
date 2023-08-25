@@ -23,8 +23,12 @@ jobs:
           echo "RELEASE_BODY=$BODY" >> $GITHUB_ENV
       - name: Create GitHub Release
         id: create_release
-        run: |
-          echo "tag_name ${{ env.NEW_TAG }}"
-          echo "release_body ${{ env.RELEASE_BODY }}"
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ env.NEW_TAG }}
+          release_name: ${{ env.NEW_TAG }}
+          body: ${{ env.RELEASE_BODY }}
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

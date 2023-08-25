@@ -16,12 +16,21 @@ jobs:
           NEW_TAG="v$(date +'%Y%m%d')" >> $GITHUB_ENV
           git tag $NEW_TAG
           git push origin --tags
+      - name: Get release drafter body
+        id: get_body
+        run: |
+          BODY=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                 -H "Accept: application/vnd.github.v3+json" \
+                 https://api.github.com/repos/${{ github.repository }}/releases \
+           | jq '.[] | select(.draft==true) | .body')
+          echo "RELEASE_BODY=$BODY" >> $GITHUB_ENV
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ env.NEW_TAG }}
+          release_name: ${{ env.NEW_TAG }}
+          body: ${{ env.RELEASE_BODY }}
           draft: false
           prerelease: false
         env:
