@@ -1,13 +1,25 @@
 import { Box, Button, List, ListItem, ListItemText, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { todoState } from '../state/atoms/todoState';
 import CloseIcon from '@mui/icons-material/Close';
 import { css } from '@emotion/react';
 
+function sendNotification(title: string, options?: NotificationOptions) {
+  if (Notification.permission === 'granted') {
+    new Notification(title, options);
+  }
+}
+
 export default function Home() {
   const [todos, setTodos] = useRecoilState(todoState);
   const [inputValue, setInputValue] = useState('');
+
+  useEffect(() => {
+    if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+      Notification.requestPermission();
+    }
+  }, []);
 
   const handleAddTodo = () => {
     if (inputValue !== '') {
@@ -22,8 +34,15 @@ export default function Home() {
     setTodos(newTodos);
   };
 
+  const handleSendNotification = () => {
+    sendNotification('Hello!', { body: 'This is a sample notification.' });
+  };
+
   return (
     <Box>
+      <div>
+        <button onClick={handleSendNotification}>Send Notification</button>
+      </div>
       <h1 className="title">Todo App</h1>
       <Box
         css={css`
