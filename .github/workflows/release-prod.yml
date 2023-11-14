@@ -12,6 +12,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Bump version and create tag
+        id: versioning
+        run: |
+          echo "NEW_TAG=v$(date +'%Y%m%d')" >> $GITHUB_ENV
+
+      - name: Get Previous Tag Name
+        run: |
+
+          # Fetch the tag name of the latest release
+          PREVIOUS_TAG_NAME=$(curl -H 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' \
+                               -H 'Accept: application/vnd.github.v3+json' \
+                               https://api.github.com/repos/${{ github.repository }}/releases/latest \
+                               | jq -r '.tag_name')
+
+          # Check if a tag was retrieved
+          if [ -z "$PREVIOUS_TAG_NAME" ]; then
+            echo "No previous tag found."
+            # Handle the case where no tag is found, if necessary
+          else
+            echo "Previous Tag: $PREVIOUS_TAG_NAME"
+            # Set the tag name as an environment variable
+            echo "PREVIOUS_TAG_NAME=$PREVIOUS_TAG_NAME" >> $GITHUB_ENV
+          fi
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
@@ -25,22 +49,27 @@ jobs:
 
       - name: Build and Deploy to Vercel
         run: |
+
           vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
           vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Manage GitHub Release
+      - name: Create GitHub Release
         run: |
-          # Retrieve the latest tag (previous release)
-          PREVIOUS_TAG=$(git describe --tags --abbrev=0)
 
-          # Generate new tag (current release)
-          NEW_TAG="v$(date +'%Y%m%d')"
+          # Generate the release notes and save to a file
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d "{\"tag_name\": \"${{ env.NEW_TAG }}\", \"target_commitish\": \"release\", \"previous_tag_name\": \"${{ env.PREVIOUS_TAG_NAME }}\"}" \
+            https://api.github.com/repos/${{ github.repository }}/releases/generate-notes \
+            | jq -r '.body' > release_notes.txt
 
-          # Create release with auto-generated release notes
-          RESPONSE=$(curl -X POST \
-             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-             -H "Accept: application/vnd.github.v3+json" \
-             -d "{\"tag_name\": \"$NEW_TAG\", \"name\": \"$NEW_TAG\", \"body\": \"\", \"draft\": false, \"generate_release_notes\": true}" \
-             https://api.github.com/repos/${{ github.repository }}/releases)
+          # Create a JSON object with the release notes
+          RELEASE_NOTES_JSON=$(jq -Rs . release_notes.txt)
 
-          echo "Release created: $RESPONSE"
+          # Update and publish the release with the JSON-formatted release notes
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d "{\"name\": \"${{ env.NEW_TAG }}\", \"tag_name\": \"${{ env.NEW_TAG }}\", \"draft\": false, \"body\": $RELEASE_NOTES_JSON}" \
+            https://api.github.com/repos/${{ github.repository }}/releases
