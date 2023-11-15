@@ -2,15 +2,12 @@ name: Release to Production
 
 on:
   workflow_dispatch:
-  pull_request:
-    types: ['labeled']
   push:
     branches:
       - release
 
 jobs:
   create_release:
-    if: contains(github.event.pull_request.labels.*.name, 'create-release')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -75,5 +72,24 @@ jobs:
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
-            -d "{\"name\": \"${{ env.NEW_TAG }}\", \"tag_name\": \"${{ env.NEW_TAG }}\", \"draft\": false, \"body\": $RELEASE_NOTES_JSON}" \
+            -d "{\"name\": \"${{ env.NEW_TAG }}\", \"tag_name\": \"${{ env.NEW_TAG }}\", \"draft\": false, \"body\": RELEASE_NOTES_JSON }" \
             https://api.github.com/repos/${{ github.repository }}/releases
+
+      - name: Send to Slack
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          payload: |
+            {
+              "text": "A new release has been created for ${{ github.repository }}: ${{ env.NEW_TAG }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
