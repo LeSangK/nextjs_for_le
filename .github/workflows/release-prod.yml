@@ -2,12 +2,15 @@ name: Release to Production
 
 on:
   workflow_dispatch:
+  pull_request:
+    types: ['labeled']
   push:
     branches:
       - release
 
 jobs:
   create_release:
+    if: contains(github.event.pull_request.labels.*.name, 'create-release')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
