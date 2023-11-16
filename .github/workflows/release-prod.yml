@@ -35,22 +35,17 @@ jobs:
       - name: Create New Tag
         run: |
 
-          # 检查前一个 tag 是否包含当前日期
-          if [[ $PREVIOUS_TAG_NAME == v$CURRENT_DATE* ]]; then
-            # 检查是否已经有计数器
-            if [[ $PREVIOUS_TAG_NAME == *"_*" ]]; then
-              # 从前一个 tag 中提取计数器并增加
-              COUNTER=$(echo $PREVIOUS_TAG_NAME | sed -E 's/v[0-9]{8}_([0-9]+)/\1/')
-              let COUNTER=COUNTER+1
-            else
-              # 如果前一个 tag 没有计数器，则从 1 开始
-              COUNTER=1
-            fi
+          CURRENT_DATE=$(date +'%Y%m%d')
+
+          if [[ ${{env.PREVIOUS_TAG_NAME}} == v$CURRENT_DATE* ]]; then
+            COUNTER=$(echo $PREVIOUS_TAG_NAME | sed -E 's/v[0-9]{8}_([0-9]+)/\1/')
+            let COUNTER=COUNTER+1
             NEW_TAG="v${CURRENT_DATE}_${COUNTER}"
           else
-            # 如果前一个 tag 不包含当前日期，创建一个不带计数器的新 tag
             NEW_TAG="v${CURRENT_DATE}"
           fi
+
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
