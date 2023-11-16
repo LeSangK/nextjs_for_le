@@ -61,5 +61,5 @@ jobs:
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
-            -d "{\"name\": \"${{ env.NEW_TAG }}\", \"tag_name\": \"${{ env.NEW_TAG }}\", \"draft\": false, \"generate_release_notes\": true \
+            -d "{\"name\": \"${{ env.NEW_TAG }}\", \"tag_name\": \"${{ env.NEW_TAG }}\", \"draft\": false, \"generate_release_notes\": true }" \
             https://api.github.com/repos/${{ github.repository }}/releases
