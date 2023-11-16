@@ -13,11 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Bump version and create tag
-        id: versioning
-        run: |
-          echo "NEW_TAG=v$(date +'%Y%m%d')" >> $GITHUB_ENV
-
       - name: Get Previous Tag Name
         run: |
 
@@ -36,6 +31,21 @@ jobs:
             # Set the tag name as an environment variable
             echo "PREVIOUS_TAG_NAME=$PREVIOUS_TAG_NAME" >> $GITHUB_ENV
           fi
+
+      - name: Create New Tag
+        run: |
+
+          CURRENT_DATE=$(date +'%Y%m%d')
+
+          if [[ ${{env.PREVIOUS_TAG_NAME}} == v$CURRENT_DATE* ]]; then
+            COUNTER=$(echo $PREVIOUS_TAG_NAME | sed -E 's/v[0-9]{8}_([0-9]+)/\1/')
+            let COUNTER=COUNTER+1
+            NEW_TAG="v${CURRENT_DATE}_${COUNTER}"
+          else
+            NEW_TAG="v${CURRENT_DATE}"
+          fi
+
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
