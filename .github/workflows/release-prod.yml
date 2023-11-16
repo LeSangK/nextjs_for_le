@@ -57,20 +57,9 @@ jobs:
       - name: Create GitHub Release
         run: |
 
-          # Generate the release notes and save to a file
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            -d "{\"tag_name\": \"${{ env.NEW_TAG }}\", \"target_commitish\": \"release\", \"previous_tag_name\": \"${{ env.PREVIOUS_TAG_NAME }}\"}" \
-            https://api.github.com/repos/${{ github.repository }}/releases/generate-notes \
-            | jq -r '.body' > release_notes.txt
-
-          # Create a JSON object with the release notes
-          RELEASE_NOTES_JSON=$(jq -Rs . release_notes.txt)
-
           # Update and publish the release with the JSON-formatted release notes
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
-            -d "{\"name\": \"${{ env.NEW_TAG }}\", \"tag_name\": \"${{ env.NEW_TAG }}\", \"draft\": false, \"body\": $RELEASE_NOTES_JSON}" \
+            -d "{\"name\": \"${{ env.NEW_TAG }}\", \"tag_name\": \"${{ env.NEW_TAG }}\", \"draft\": false, \"generate_release_notes\": true \
             https://api.github.com/repos/${{ github.repository }}/releases
