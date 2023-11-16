@@ -1,5 +1,9 @@
 name: Deploy to production
 on:
+  workflow_run:
+    workflows: ['Release to Production']
+    types:
+      - completed
   release:
     types: [published]
 
@@ -7,13 +11,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
           node-version: '16' # Specify the Node.js version here
-
-      - name: Checkout code
-        uses: actions/checkout@v4
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
