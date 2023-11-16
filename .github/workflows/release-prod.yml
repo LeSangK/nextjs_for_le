@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get Previous Tag Name
         run: |
@@ -65,5 +65,5 @@ jobs:
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
-            -d "{\"name\": \"${{ env.NEW_TAG }}\", \"tag_name\": \"${{ env.NEW_TAG }}\", \"draft\": false, \"body\": $RELEASE_NOTES_JSON}" \
+            -d "{\"name\": \"${{ env.NEW_TAG }}\", \"tag_name\": \"${{ env.NEW_TAG }}\", \"draft\": false, \"body\": $RELEASE_NOTES_JSON, \"make_latest\": true }" \
             https://api.github.com/repos/${{ github.repository }}/releases
