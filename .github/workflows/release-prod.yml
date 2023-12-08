@@ -2,18 +2,13 @@ name: Release to Production
 
 on:
   workflow_dispatch:
-    inputs:
-      branchName:
-        description: 'Branch to run the workflow on'
-        required: true
-        default: 'release'
-
   push:
     branches:
       - release
 
 jobs:
   create_release:
+    if: ${{ github.ref == 'refs/heads/release' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
