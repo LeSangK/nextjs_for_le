@@ -2,6 +2,12 @@ name: Release to Production
 
 on:
   workflow_dispatch:
+    inputs:
+      branchName:
+        description: 'Branch to run the workflow on'
+        required: true
+        default: 'main'
+
   push:
     branches:
       - release
