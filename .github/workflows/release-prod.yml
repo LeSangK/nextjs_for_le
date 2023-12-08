@@ -6,7 +6,7 @@ on:
       branchName:
         description: 'Branch to run the workflow on'
         required: true
-        default: 'main'
+        default: 'release'
 
   push:
     branches:
